@@ -37,9 +37,9 @@ var shoutBox = (function () {
                    
                     //use toggleState var to change close/open icon image
                     if(toggleState == 'block') {
-                        $(".shoutbox__header div").attr('class', 'open_btn');
+                        $(".shoutbox__header i").attr('class', 'icon-circle-arrow-up');
                     } else {
-                        $(".shoutbox__header div").attr('class', 'close_btn');
+                        $(".shoutbox__header i").attr('class', 'icon-circle-arrow-down');
                     }
                 });
 
