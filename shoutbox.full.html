@@ -8,43 +8,35 @@
 		</div>
 	</div>
 </div>
+
 <style>
 	.shoutbox {
 		display: none;
-		background:#627BAE;
 		width:260px;
 		overflow:hidden;
 		position:fixed;
 		bottom:0;
 		right:10%;
-		z-index:9;
-		font: 11px 'lucida grande', tahoma, verdana, arial, sans-serif;
-	}
-	.shoutbox__header .close_btn {
-		background: url(images/close_btn.png) no-repeat 0px 0px;
-		float:right; width:15px;
-		height: 15px;
-	}
-	.shoutbox__header .close_btn:hover {
-		background: url(images/close_btn.png) no-repeat 0px -16px;
-	}
-	.shoutbox__header .open_btn {
-		background: url(images/close_btn.png) no-repeat 0px -32px;
-		float:right; width:15px;
-		height:15px;
-	}
-	.shoutbox__header .open_btn:hover {
-		background: url(images/close_btn.png) no-repeat 0px -48px;
+		z-index:20;
+		font: 11px "Helvetica Neue",Helvetica,Verdana,Arial,sans-serif;
+		font-weight: 400;
 	}
 	.shoutbox__header{
-		padding: 5px 3px 5px 5px;
-
-		font-weight: bold; color:#fff;
-		border: 1px solid rgba(0, 39, 121, .76);
-		border-bottom:none; cursor:pointer;
+		background-color: #565656;
+		padding: 5px 3px 5px 10px;
+		font-weight: 300;
+		color:#fff;
+		border: 1px solid #424242;
+		border-bottom:none;
+		cursor:pointer;
+		font-size: 12px;
 	}
 	.shoutbox__header:hover{
-		background-color: #627BAE;
+		background-color: #425572;
+	}
+	.shoutbox__header i {
+		float: right;
+		padding: 0px 5px;
 	}
 	.shoutbox__messages {
 		background: #FFFFFF; height: 200px;
@@ -61,12 +53,11 @@
 		border-bottom:none;
 	}
 	.shoutbox__message .time{
-		font-weight: normal;
 		float:right;
 		color: #D5D5D5;
 	}
 	.shoutbox__message .name{
-		font-weight: bold;
+		font-weight: 500;
 		margin-bottom: 10px;
 		margin-top: 10px;
 		display: block;
@@ -76,8 +67,8 @@
 		height: 25px;
 		border: 1px solid #CCC;
 		border-top: none;
-		padding: 3px 0px 0px 3px;
-		font: 11px 'lucida grande', tahoma, verdana, arial, sans-serif;
+		padding: 3px 5px 1px 5px;
+		font: 11px "Helvetica Neue",Helvetica,Verdana,Arial,sans-serif;
 		border-radius: 0;
 		margin: 0;
 	}
