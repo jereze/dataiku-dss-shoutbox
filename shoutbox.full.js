@@ -60,7 +60,13 @@ var shoutBox = (function () {
         function displayMessage(from, message) {
             var time = new Date().toLocaleTimeString().toString();
 
-            $('.shoutbox__messages').append('<div class="shoutbox__message"><span class="time">'+time+'</span><span class="name">'+from+'</span>'+message+'</div>').children(':last').hide().fadeIn();
+            var message_html = '<div class="shoutbox__message">'+
+                '<img src="http://test2.dataiku.com:6500/dip/api/image/get-image?type=USER&id='+from+'&size=20x20&hash='+$rootScope.userPicturesHash+'" alt="" />'+
+                '<span class="name">'+from+'</span>'+
+                '<span class="time">'+time+'</span>'+
+                message+'</div>';
+
+            $('.shoutbox__messages').append(message_html).children(':last').hide().fadeIn();
 
             var scrolltoh = $('.shoutbox__messages')[0].scrollHeight;
             $('.shoutbox__messages').scrollTop(scrolltoh);
@@ -72,7 +78,6 @@ var shoutBox = (function () {
         }
 
         Notification.registerEvent('shoutbox-receive-message',function(evt, data) {
-            console.log(data);
             displayMessage(data.from, data.message);
         });
  
