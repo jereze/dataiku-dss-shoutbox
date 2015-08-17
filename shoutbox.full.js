@@ -70,6 +70,10 @@ var shoutBox = (function () {
 
             var scrolltoh = $('.shoutbox__messages')[0].scrollHeight;
             $('.shoutbox__messages').scrollTop(scrolltoh);
+
+            if(from!==personName) {
+                playNotification();
+            }
         }
   
         function sendMessage(message){
@@ -80,7 +84,11 @@ var shoutBox = (function () {
         Notification.registerEvent('shoutbox-receive-message',function(evt, data) {
             displayMessage(data.from, data.message);
         });
- 
+
+        function playNotification() {
+            $('#shoutbox__sound').play();
+        }
+
         // Reveal public pointers to
         // private functions and properties
  

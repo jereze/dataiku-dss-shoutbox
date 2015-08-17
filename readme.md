@@ -22,3 +22,7 @@ Install dependencies:
 Minify before pushing:
 
     make
+
+## Credit
+
+Audio notification file from [Ion.Sound](/IonDen/ion.sound).
