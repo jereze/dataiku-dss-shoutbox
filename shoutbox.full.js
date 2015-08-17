@@ -86,7 +86,7 @@ var shoutBox = (function () {
         });
 
         function playNotification() {
-            $('#shoutbox__sound').play();
+            $('#shoutbox__sound').trigger('play');
         }
 
         // Reveal public pointers to
