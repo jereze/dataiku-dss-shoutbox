@@ -1,7 +1,7 @@
 Shoutbox for Data Science Studio
 --------------------------------
 
-V0.1.0
+V0.4
 
 ![Preview](preview.png)
 
@@ -22,6 +22,28 @@ Install dependencies:
 Minify before pushing:
 
     make
+
+## Changelob
+
+**Version 0.4 (2015-09-03)**
+
+* Visual notification for a new message
+* Remember when shoutbox is opene/closed + same behaviour in every tab (settings saved in local storage)
+
+**Version 0.3 (2015-08-17)**
+
+* Audio notification for a new message
+
+**Version 0.2 (2015-08-14)**
+
+* Better style
+* Avatars
+* Fix up/down icon
+
+**Version 0.1 (2015-08-13)**
+
+* Proof of concept
+
 
 ## Credit
 
