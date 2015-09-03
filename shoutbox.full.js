@@ -1,7 +1,8 @@
-
 var shoutBox = (function () {
 
         var personName = "Unknown";
+
+        var settings = {};
 
         function randomPersonName() {
             var a = ["Small", "Blue", "Fatty", "Pink"];
@@ -12,9 +13,9 @@ var shoutBox = (function () {
 
             return a[rA] + b[rB];
         }
- 
+
         function init() {
-            //First verify that the user is connected to DSS or relay init
+            //First verify that the user is connected to DSS or delay init()
             if ($rootScope.appConfig === undefined || $rootScope.appConfig.loggedIn === false) {
                 setTimeout(function () {
                     init();
@@ -25,22 +26,13 @@ var shoutBox = (function () {
 
             //Onload
             $(function() {
+                initSettings();
+
                 $(".shoutbox").show();
 
                 //toggle hide/show shoutbox
                 $(".shoutbox__header").on("click",function (e) {
-                    //get CSS display state of .shoutbox__body element
-                    var toggleState = $('.shoutbox__body').css('display');
-
-                    //toggle show/hide shoutbox__body
-                    $('.shoutbox__body').slideToggle(200);
-                   
-                    //use toggleState var to change close/open icon image
-                    if(toggleState == 'block') {
-                        $(".shoutbox__header i").attr('class', 'icon-circle-arrow-up');
-                    } else {
-                        $(".shoutbox__header i").attr('class', 'icon-circle-arrow-down');
-                    }
+                    toggleDisplay();
                 });
 
                 //trigger when user hits enter key
@@ -56,6 +48,91 @@ var shoutBox = (function () {
                 personName = $rootScope.appConfig.login || randomPersonName();
             });
         }
+
+        // Toggle hide/show shoutbox
+        function toggleDisplay() {
+            var state = toggleState();
+
+            //toggle show/hide shoutbox__body
+            $('.shoutbox__body').slideToggle(200, function() {
+                //use toggleState var for icons and unread messages
+                if(state == 'open') {
+                    //closing the shoutbox
+                    setSettings({'shoutbox_is_open': false});
+                    $(".shoutbox__header i").attr('class', 'icon-circle-arrow-up');
+                } else {
+                    //opening the shoutbox
+                    setSettings({'shoutbox_is_open': true, 'unread_message': false});
+                    $(".shoutbox__header i").attr('class', 'icon-circle-arrow-down');
+                }
+            });
+        }
+
+        // Get toggle state
+        function toggleState() {
+            return ($('.shoutbox__body').css('display') === 'block') ? 'open' : 'closed';
+        }
+
+        // Getting the settings (saved and shared with other windows/tabs via localStorage)
+        function initSettings() {
+            var default_settings = {
+                'volume_is_on': true,
+                'shoutbox_is_open': true,
+                'unread_message': false
+            };
+            if (typeof localStorage === "undefined" || localStorage.getItem("shoutbox.settings") === null) {
+                //no existing settings
+                setSettings(default_settings);
+            }
+            else {
+                //loading existing settings
+                console.log('loading existing settings');
+                var ls_settings = JSON.parse(localStorage.getItem("shoutbox.settings"));
+                console.log(ls_settings);
+                var new_settings = $.extend({}, default_settings, ls_settings);
+                setSettings(new_settings);
+            }
+        }
+
+        // Updating or saving settings
+        function setSettings(object) {
+            console.log('Settings saved');
+            console.log(object);
+            if (typeof object === 'object' && object !== null) {
+                for(var index in object) {
+                    settings[index] = object[index];
+                }
+                if(typeof localStorage !== "undefined") {
+                    var ls_settings = JSON.parse(localStorage.getItem("shoutbox.settings"));
+                    if (!angular.equals(ls_settings, settings)) {
+                        localStorage.setItem('shoutbox.settings', JSON.stringify(settings));
+                    }
+                }
+                applySettings();
+            }
+        }
+
+        // Apply settings (to the UI, etc.)
+        function applySettings() {
+            // open or close shoutbox
+            if (settings.shoutbox_is_open !== (toggleState() === 'open') ) {
+                toggleDisplay();
+            }
+            // unread notification
+            if (settings.unread_message !== $(".shoutbox__header").hasClass("unread")) {
+                $(".shoutbox__header").toggleClass("unread");
+            }
+        }
+
+        // Event fired when settings updated in another window/tab
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'shoutbox.settings') {
+                console.log('Settings updated (from another window)');
+                console.log(e.newValue);
+                settings = JSON.parse(e.newValue);
+                applySettings();
+            }
+        });
  
         function displayMessage(from, message) {
             var time = new Date().toLocaleTimeString().toString();
@@ -70,10 +147,6 @@ var shoutBox = (function () {
 
             var scrolltoh = $('.shoutbox__messages')[0].scrollHeight;
             $('.shoutbox__messages').scrollTop(scrolltoh);
-
-            if(from!==personName) {
-                playNotification();
-            }
         }
   
         function sendMessage(message){
@@ -81,8 +154,17 @@ var shoutBox = (function () {
             Notification.broadcastToOtherSessions('shoutbox-receive-message',{from:personName,message:message});
         }
 
+        // Event fired when message received
         Notification.registerEvent('shoutbox-receive-message',function(evt, data) {
             displayMessage(data.from, data.message);
+
+            // notification when message is received from another user
+            if(data.from!==personName) {
+                playNotification();
+                if (toggleState() == 'closed') {
+                    setSettings({'unread_message': true});
+                }
+            }
         });
 
         function playNotification() {
@@ -93,11 +175,10 @@ var shoutBox = (function () {
         // private functions and properties
  
        return {
-            init: init
+            init: init,
+            toggleDisplay: toggleDisplay
         };
  
     })();
  
 shoutBox.init();
-
-
