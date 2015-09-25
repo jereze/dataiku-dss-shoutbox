@@ -45,7 +45,7 @@ var shoutBox = (function () {
                 });
 
                 //register name
-                personName = $rootScope.appConfig.login || randomPersonName();
+                personName = $rootScope.appConfig.user.displayName || $rootScope.appConfig.login || randomPersonName();
             });
         }
 
