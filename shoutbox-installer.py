@@ -18,7 +18,6 @@ import re
 
 # DSS Directory
 
-#dataiku_dss="/Applications/DataScienceStudio.app/Contents/Resources/kit"
 dataiku_dss = os.path.dirname(os.path.realpath(__file__))
 print "OK - Trying to find DSS in " + dataiku_dss
 
@@ -32,12 +31,20 @@ if not os.path.isfile(html_file) or not os.path.isfile(js_file):
 	raise SystemExit
 print "OK - DSS installation found"
 
+# Checking if there is a parameter for dev branch
+
+if len(sys.argv) > 1 and sys.argv[1] == 'dev':
+	branch = 'dev'
+	print "OK - Working on dev branch"
+else:
+	branch = 'master'
+
 # Downloading files from Github
 
-response = urllib2.urlopen('https://raw.githubusercontent.com/jereze/dataiku-dss-shoutbox/master/shoutbox.min.html')
+response = urllib2.urlopen('https://raw.githubusercontent.com/jereze/dataiku-dss-shoutbox/'+branch+'/shoutbox.min.html')
 html_code = response.read()
 
-response = urllib2.urlopen('https://raw.githubusercontent.com/jereze/dataiku-dss-shoutbox/master/shoutbox.min.js')
+response = urllib2.urlopen('https://raw.githubusercontent.com/jereze/dataiku-dss-shoutbox/'+branch+'/shoutbox.min.js')
 js_code = response.read()
 js_code = js_code.replace('\n', ' ')
 
