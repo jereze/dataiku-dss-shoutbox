@@ -1,6 +1,7 @@
 var shoutBox = (function () {
 
         var personName = "Unknown";
+        var personId = "unknown";
 
         var settings = {};
 
@@ -44,8 +45,9 @@ var shoutBox = (function () {
                         }
                 });
 
-                //register name
+                //register name and id
                 personName = $rootScope.appConfig.user.displayName || $rootScope.appConfig.login || randomPersonName();
+                personId = $rootScope.appConfig.login || 'unknown';
             });
         }
 
@@ -134,12 +136,12 @@ var shoutBox = (function () {
             }
         });
  
-        function displayMessage(from, message) {
+        function displayMessage(from_name, from_id, message) {
             var time = new Date().toLocaleTimeString().toString();
 
             var message_html = '<div class="shoutbox__message">'+
-                '<img src="http://test2.dataiku.com:6500/dip/api/image/get-image?type=USER&id='+from+'&size=20x20&hash='+$rootScope.userPicturesHash+'" alt="" />'+
-                '<span class="name">'+from+'</span>'+
+                '<img src="/dip/api/image/get-image?type=USER&id='+from_id+'&size=20x20&hash='+$rootScope.userPicturesHash+'" alt="" />'+
+                '<span class="name">'+from_name+'</span>'+
                 '<span class="time">'+time+'</span>'+
                 message+'</div>';
 
@@ -150,16 +152,16 @@ var shoutBox = (function () {
         }
   
         function sendMessage(message){
-            displayMessage(personName, message);
-            Notification.broadcastToOtherSessions('shoutbox-receive-message',{from:personName,message:message});
+            displayMessage(personName, personId, message);
+            Notification.broadcastToOtherSessions('shoutbox-receive-message',{from_name:personName, from_id:personId, message:message});
         }
 
         // Event fired when message received
         Notification.registerEvent('shoutbox-receive-message',function(evt, data) {
-            displayMessage(data.from, data.message);
+            displayMessage(data.from_name, data.from_id, data.message);
 
             // notification when message is received from another user
-            if(data.from!==personName) {
+            if(data.from_name!==personName) {
                 playNotification();
                 if (toggleState() == 'closed') {
                     setSettings({'unread_message': true});
